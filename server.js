@@ -22,7 +22,11 @@ app.use(bodyParser.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerInfo));
 // Para acceder a las rutas de peliculas hemos definido middleware para validar al usuario.
 function private(req, res, next) {
-  let token = req.headers.authorization.substring(7);
+  let token = "";
+  if (req.headers.authorization) {
+    token = req.headers.authorization.substring(7);
+  }
+
   jwt.verify(token, req.app.get("secretKey"), function (err, decoded) {
     if (err) {
       res.json({ status: "error", message: err.message, data: null });
